@@ -15,10 +15,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 
 
-
-
-
-
 public class ForeverVip implements IXposedHookLoadPackage {
 
 
@@ -35,13 +31,13 @@ public class ForeverVip implements IXposedHookLoadPackage {
                     Main_context = (Context) param.args[0];
                 }
             });
-            Class AppUpdateResponseClazz = XposedHelpers.findClassIfExists("com.qimao.qmservice.app.entity.AppUpdateResponse",loadPackageParam.classLoader);
-            XposedHelpers.findAndHookMethod("com.qimao.qmuser.view.AppAboutActivity$9", loadPackageParam.classLoader, "onChanged", AppUpdateResponseClazz, new XC_MethodReplacement() {
+            XposedHelpers.findAndHookMethod("com.km.app.update.UpdateVersionV2Activity", loadPackageParam.classLoader, "onCreate",android.os.Bundle.class,new XC_MethodHook() {
                 @Override
-                protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
                     Log.d(TAG, "七猫pass更新弹窗");
+                    XposedHelpers.callMethod(param.thisObject,"finish");
                     Toast.makeText(Main_context,"更新弹窗已被去除",Toast.LENGTH_SHORT).show();
-                    return null;
                 }
             });
             XposedHelpers.findAndHookMethod("zg", loadPackageParam.classLoader, "isVipUser", Context.class, new XC_MethodReplacement() {
@@ -73,7 +69,6 @@ public class ForeverVip implements IXposedHookLoadPackage {
                     return null;
                 }
             });
-
 
         }
     }
